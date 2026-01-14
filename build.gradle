@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.9'
+}
+
+group = 'com.github.dimitryivaniuta'
+version = '1.1.0'
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ---- BOMs (this is the missing piece) ----
+    implementation platform("org.springframework.boot:spring-boot-dependencies:3.5.9")
+    testImplementation platform("org.springframework.boot:spring-boot-dependencies:3.5.9")
+
+    testImplementation platform("org.testcontainers:testcontainers-bom:1.20.4")
+
+    // ---- Spring Boot / Kafka / DB ----
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // ---- Lombok ----
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    // ---- Tests ----
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:kafka'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
